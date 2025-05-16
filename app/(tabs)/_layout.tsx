@@ -1,45 +1,120 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Tabs } from "expo-router";
+import { images } from "@/constants/images";
+import { icons } from "@/constants/icons";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const _Layout = () => {
+  const TabBarIcon = ({
+    focused,
+    icon,
+    label,
+  }: {
+    focused: boolean;
+    icon: any;
+    label: string;
+  }) => {
+    if (focused) {
+      return (
+        <ImageBackground
+          source={images.highlight}
+          className="flex flex-row items-center justify-center rounded-full w-full flex-1 min-w-28 min-h-16 mt-4 overflow-hidden"
+        >
+          <Image source={icon} tintColor="#151312" className="size-5" />
+          <Text className="text-secondary text-base font-semibold ml-2">
+            {label}
+          </Text>
+        </ImageBackground>
+      );
+    }
+    return (
+      <View className="flex flex-row items-center justify-center rounded-full w-full flex-1 min-w-28 min-h-14 mt-4 overflow-hidden">
+        <Image source={icon} tintColor="#A8B5DB" className="size-5" />
+      </View>
+    );
+  };
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarShowLabel: false,
+        tabBarItemStyle: {
+          width: "100%",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        tabBarStyle: {
+          backgroundColor: "#151312",
+          borderRadius: 50,
+          height: 52,
+          marginHorizontal: 20,
+          marginBottom: 36,
+          overflow: "hidden",
+          position: "absolute",
+          borderColor: "0f0d23",
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          headerShown: false,
+          title: "Home",
+          tabBarIcon: ({ focused }) => {
+            return (
+              <TabBarIcon focused={focused} icon={icons.home} label="Home" />
+            );
+          },
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          headerShown: false,
+          title: "Search",
+          tabBarIcon: ({ focused }) => {
+            return (
+              <TabBarIcon
+                focused={focused}
+                icon={icons.search}
+                label="Search"
+              />
+            );
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="saved"
+        options={{
+          headerShown: false,
+          title: "Saved",
+          tabBarIcon: ({ focused }) => {
+            return (
+              <TabBarIcon focused={focused} icon={icons.save} label="Saved" />
+            );
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+          title: "Profile",
+          tabBarIcon: ({ focused }) => {
+            return (
+              <TabBarIcon
+                focused={focused}
+                icon={icons.person}
+                label="Profile"
+              />
+            );
+          },
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default _Layout;
+
+const styles = StyleSheet.create({});

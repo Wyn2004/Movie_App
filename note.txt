@@ -1,0 +1,10 @@
+-- Set up project --
+
+- Cài thư viện: npm i nativewind tailwindcss 
+  react-native-reanimated: Thư viện animation mạnh mẽ nhất cho React Native.
+  react-native-safe-area-context: Tránh UI bị che bởi notch/status bar trên iOS/Android
+- Khởi tạo tailwind: npx tailwindcss init 
+  Chỉnh file tailwind.config.js
+  Tạo global.css trong app, chỉnh trong file đó
+  Tạo babel.config.js ở root
+- Config metro.config.js: npx expo customize metro.config.ts
