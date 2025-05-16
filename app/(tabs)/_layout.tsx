@@ -20,7 +20,7 @@ const _Layout = () => {
           source={images.highlight}
           className="flex flex-row items-center justify-center rounded-full w-full flex-1 min-w-28 min-h-16 mt-4 overflow-hidden"
         >
-          <Image source={icon} tintColor="#151312" className="size-5" />
+          <Image source={icon} tintColor="#151312" className="size-6" />
           <Text className="text-secondary text-base font-semibold ml-2">
             {label}
           </Text>
