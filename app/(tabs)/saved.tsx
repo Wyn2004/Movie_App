@@ -1,15 +1,70 @@
-import { icons } from "@/constants/icons";
-import { View, Text, Image } from "react-native";
+import { images } from "@/constants/images";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import MovieCardSaved from "@/components/MovieCardSaved";
+import EmptySaved from "@/components/EmptySaved";
+import { fetchSavedMovies } from "@/services/appWrite";
+import useFetch from "@/hooks/useFetch";
+import { useIsFocused } from "@react-navigation/native";
 
 const Saved = () => {
+  const [filterActive, setFilterActive] = useState(false);
+  const isFocused = useIsFocused();
+
+  const {
+    data: moviesSaved,
+    isLoading,
+    fetchData,
+  } = useFetch(() => fetchSavedMovies(), true);
+
+  useEffect(() => {
+    fetchData();
+  }, [isFocused]);
+
+  if (isLoading) return <ActivityIndicator />;
+
   return (
-    <SafeAreaView className="bg-primary flex-1 px-10">
-      <View className="flex justify-center items-center flex-1 flex-col gap-5">
-        <Image source={icons.save} className="size-10" tintColor="#fff" />
-        <Text className="text-gray-500 text-base">Save</Text>
-      </View>
-    </SafeAreaView>
+    <View className="flex-1 bg-primary">
+      <Image source={images.bg} className="absolute w-full" />
+      <SafeAreaView className="flex-1">
+        <View className="px-5 flex-row items-center justify-between mt-4">
+          <Text className="text-white text-2xl font-bold">My Watchlist</Text>
+          <TouchableOpacity
+            className="bg-light-300/20 p-2 rounded-full"
+            onPress={() => setFilterActive(!filterActive)}
+          >
+            <Feather
+              name={filterActive ? "filter" : "sliders"}
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {moviesSaved && moviesSaved.length === 0 ? (
+          <EmptySaved />
+        ) : (
+          <FlatList
+            data={moviesSaved}
+            renderItem={({ item }) => (
+              <MovieCardSaved item={item} reFetch={() => fetchData()} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ padding: 20 }}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+      </SafeAreaView>
+    </View>
   );
 };
 

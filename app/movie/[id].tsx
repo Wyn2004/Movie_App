@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -14,6 +13,7 @@ import { fetchMovieDetails } from "@/services/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import MovieInfo from "@/components/MovieInfo";
+import { saveMovie } from "@/services/appWrite";
 
 const MovieDetails = () => {
   const { id } = useLocalSearchParams();
@@ -21,6 +21,10 @@ const MovieDetails = () => {
   const { data: movieDetail, isLoading } = useFetch(() =>
     fetchMovieDetails({ movieId: id.toString() })
   );
+
+  const handleSaveMovie = async (movie: Movie) => {
+    await saveMovie(movie);
+  };
 
   if (isLoading)
     return (
@@ -32,7 +36,7 @@ const MovieDetails = () => {
   return (
     <View className="bg-primary flex-1">
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        <View>
+        <View className="relative mb-5">
           <Image
             source={{
               uri: `https://image.tmdb.org/t/p/w500${movieDetail?.poster_path}`,
@@ -40,13 +44,22 @@ const MovieDetails = () => {
             className="w-full h-[550px]"
             resizeMode="stretch"
           />
-          <TouchableOpacity className="absolute -bottom-6 right-5 rounded-full size-14 bg-white flex items-center justify-center">
-            <Image
-              source={icons.play}
-              className="w-6 h-7 ml-1"
-              resizeMode="stretch"
-            />
-          </TouchableOpacity>
+          <View className="absolute -bottom-12 right-1 flex-row space-x-3 justify-between w-full p-5">
+            <TouchableOpacity className="rounded-full size-14 bg-white flex items-center justify-center">
+              <Image
+                source={icons.play}
+                className="w-6 h-7 ml-1"
+                resizeMode="stretch"
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="rounded-full size-14 bg-accent flex items-center justify-center"
+              onPress={() => handleSaveMovie(movieDetail as unknown as Movie)}
+            >
+              <Image source={icons.save} className="w-6 h-6" tintColor="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View className="flex-col items-start justify-center mt-5 px-5">
